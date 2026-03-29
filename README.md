@@ -31,14 +31,24 @@ playwright install chromium
 
 The bot uses a persistent browser profile so LinkedIn sees your real session.
 
+**Step 1** — Create the profile directory:
 ```bash
-python -m playwright codegen linkedin.com --save-storage=linkedin_session.json
+mkdir li_profile
 ```
 
-A browser window opens. Log in to LinkedIn normally. Once logged in, close the browser.
-This saves your session — you won't need to log in again unless LinkedIn expires it.
+**Step 2** — Launch the browser and log in:
+```bash
+python -m playwright open --save-storage=li_profile/session.json linkedin.com
+```
 
-Set the profile directory in your `.env` file (see next step).
+A browser window opens. Log in to LinkedIn normally. Once logged in, close the browser window. Your session is now saved in `li_profile/`.
+
+**Step 3** — Set the profile path in `.env`:
+```
+LI_PROFILE_DIR=./li_profile
+```
+
+You won't need to log in again unless LinkedIn expires your session.
 
 ---
 
@@ -47,7 +57,11 @@ Set the profile directory in your `.env` file (see next step).
 Copy the example file and fill it in:
 
 ```bash
+# macOS / Linux
 cp .env.example .env
+
+# Windows
+copy .env.example .env
 ```
 
 Open `.env` and set:

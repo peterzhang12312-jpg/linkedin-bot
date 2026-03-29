@@ -1,5 +1,5 @@
 .env
-drafts/
+drafts/history.jsonl
 __pycache__/
 *.pyc
 .pytest_cache/
