@@ -7,8 +7,11 @@ Usage:
     python cli.py personas new NAME
     python cli.py history show --url URL [--limit N]
     python cli.py history list [--limit N]
+    python cli.py setup-session [--profile DIR]
 """
 from __future__ import annotations
+
+import os
 
 from dotenv import load_dotenv
 
@@ -298,6 +301,40 @@ def history_list(
         return
     for entry in entries:
         typer.echo(hist.format_entry_summary(entry))
+
+
+# ---------------------------------------------------------------------------
+# setup-session command
+# ---------------------------------------------------------------------------
+
+@app.command("setup-session")
+def setup_session(
+    profile_dir: Optional[str] = typer.Option(None, "--profile", help="Playwright profile directory"),
+) -> None:
+    """Open a browser to log in to LinkedIn and save the session."""
+    import os
+    from playwright.sync_api import sync_playwright
+
+    # Resolve profile directory: CLI flag > env var > default
+    resolved_dir = profile_dir or os.environ.get("LI_PROFILE_DIR") or "./li_profile"
+
+    typer.echo(f"Opening browser with profile directory: {resolved_dir}")
+    typer.echo("Log in to LinkedIn in the browser window, then come back here and press Enter.")
+
+    with sync_playwright() as p:
+        browser = p.chromium.launch_persistent_context(
+            user_data_dir=resolved_dir,
+            headless=False,
+            args=["--disable-blink-features=AutomationControlled", "--no-sandbox"],
+            ignore_default_args=["--enable-automation"],
+        )
+        page = browser.pages[0] if browser.pages else browser.new_page()
+        page.goto("https://www.linkedin.com/login", wait_until="domcontentloaded")
+
+        typer.prompt("Press Enter once you are logged in", default="", prompt_suffix="")
+        browser.close()
+
+    typer.echo(f"Session saved. You can now run: python cli.py run --url <linkedin_url>")
 
 
 # ---------------------------------------------------------------------------

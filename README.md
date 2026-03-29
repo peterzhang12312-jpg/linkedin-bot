@@ -31,24 +31,19 @@ playwright install chromium
 
 The bot uses a persistent browser profile so LinkedIn sees your real session.
 
-**Step 1** — Create the profile directory:
-```bash
-mkdir li_profile
-```
-
-**Step 2** — Launch the browser and log in:
-```bash
-python -m playwright open --save-storage=li_profile/session.json linkedin.com
-```
-
-A browser window opens. Log in to LinkedIn normally. Once logged in, close the browser window. Your session is now saved in `li_profile/`.
-
-**Step 3** — Set the profile path in `.env`:
+**Step 1** — Set the profile path in `.env` (do this before running setup):
 ```
 LI_PROFILE_DIR=./li_profile
 ```
 
-You won't need to log in again unless LinkedIn expires your session.
+**Step 2** — Run the setup command:
+```bash
+python cli.py setup-session
+```
+
+A browser window opens and goes to the LinkedIn login page. Log in normally. Once logged in, come back to the terminal and press Enter. Your session is saved in `li_profile/` and the browser closes.
+
+You won't need to do this again unless LinkedIn expires your session.
 
 ---
 
@@ -141,9 +136,9 @@ LinkedIn showed a CAPTCHA. Solve it in the browser window that opened, then pres
 **Session expired — re-login required**
 Your LinkedIn session expired. Run:
 ```bash
-python -m playwright open --save-storage=li_profile/session.json linkedin.com
+python cli.py setup-session
 ```
-Log in again and close the browser.
+Log in again in the browser, then press Enter.
 
 **LinkedIn DOM changed — selectors need updating**
 LinkedIn changed their HTML. Open an issue or update the selectors in
