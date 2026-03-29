@@ -1,0 +1,8 @@
+{
+    "name": "Developer Mode",
+    "USER_NAME": "YOUR_FULL_NAME",
+    "USER_BIO": "Software engineer focused on [YOUR_TECH_STACK]. Building [WHAT_YOU_BUILD].",
+    "USER_GOAL": "Meet engineers working on interesting technical problems in [YOUR_DOMAIN].",
+    "USER_TONE": "technical, concise, and curious",
+    "preferred_angles": ["recent_post", "role_achievement", "shared_interest"]
+}

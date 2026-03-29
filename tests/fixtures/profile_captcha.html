@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Security Verification</title>
+</head>
+<body>
+  <main>
+    <h1>Security Verification</h1>
+    <p>
+      We need to verify that you are a human. Please complete the security
+      challenge below to continue.
+    </p>
+    <!-- In production LinkedIn renders a reCAPTCHA / hCaptcha iframe here.
+         The scraper detects this state via the URL (/checkpoint/ or /challenge/)
+         rather than by inspecting HTML content. This fixture exists for
+         documentation and potential future HTML-based detection. -->
+    <div id="captcha-placeholder">
+      [CAPTCHA widget would render here]
+    </div>
+  </main>
+</body>
+</html>

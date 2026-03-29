@@ -1,0 +1,8 @@
+{
+    "name": "Founder Mode",
+    "USER_NAME": "YOUR_FULL_NAME",
+    "USER_BIO": "Founder of [YOUR_COMPANY], building [WHAT_YOU_BUILD]. Previously [PRIOR_ROLE].",
+    "USER_GOAL": "Connect with potential advisors, partners, and early customers in [YOUR_SPACE].",
+    "USER_TONE": "direct, curious, and peer-to-peer",
+    "preferred_angles": ["company_news", "recent_post", "shared_interest"]
+}

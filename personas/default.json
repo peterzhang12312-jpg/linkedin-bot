@@ -1,0 +1,8 @@
+{
+    "name": "Default",
+    "USER_NAME": "YOUR_FULL_NAME",
+    "USER_BIO": "YOUR_BACKGROUND_IN_2_SENTENCES",
+    "USER_GOAL": "YOUR_NETWORKING_GOAL",
+    "USER_TONE": "warm and professional",
+    "preferred_angles": ["recent_post", "career_transition", "shared_interest"]
+}
