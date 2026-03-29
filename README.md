@@ -19,7 +19,7 @@ message drafts using AI, and opens the LinkedIn compose window — you paste and
 ## Installation
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/linkedin-bot.git
+git clone https://github.com/peterzhang12312-jpg/linkedin-bot.git
 cd linkedin-bot
 pip install -r requirements.txt
 playwright install chromium
@@ -141,7 +141,7 @@ LinkedIn showed a CAPTCHA. Solve it in the browser window that opened, then pres
 **Session expired — re-login required**
 Your LinkedIn session expired. Run:
 ```bash
-python -m playwright codegen linkedin.com --save-storage=linkedin_session.json
+python -m playwright open --save-storage=li_profile/session.json linkedin.com
 ```
 Log in again and close the browser.
 
