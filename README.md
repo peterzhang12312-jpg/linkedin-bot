@@ -1,22 +1,45 @@
 # LinkedIn Bot
 
-A personal LinkedIn networking tool. Scrapes a profile, generates 3 personalized
-message drafts using AI, and opens the LinkedIn compose window — you paste and send.
+> AI-generated outreach drafts. Human sends. Always.
 
-**Human-in-the-loop:** the bot never sends anything automatically.
+Scrapes a LinkedIn profile + recent posts, generates 3 personalized connection messages under 280 characters using Gemini AI, opens the compose window — **you paste and click Send.**
 
----
-
-## Prerequisites
-
-- Python 3.11 or newer — check with `python --version`
-- Git — check with `git --version`
-- A [Google AI Studio](https://aistudio.google.com/) account (free) for the Gemini API key
-- A LinkedIn account
+No auto-sending. No risk. Just better first messages, faster.
 
 ---
 
-## Installation
+## How It Works
+
+```
+python cli.py run --url https://www.linkedin.com/in/someone
+```
+
+```
+Scraping profile...  ✓
+Scraping recent posts...  ✓ (3 posts found)
+
+Draft 1 (recent_post angle):
+"Your post on agentic AI architectures resonated — the latency tradeoff point is
+underrated. I'm building similar pipelines on the legal side. Would love to connect."
+
+Draft 2 (career_transition angle):
+"Congrats on the move to Anthropic — that's a big one. I'm working on Claude-powered
+legal tools and would love to stay in your orbit. Connect?"
+
+Draft 3 (shared_interest angle):
+"Fellow believer that AI + domain expertise > pure AI. Building attorney-matching
+on court records. Your work on eval frameworks is directly relevant. Connect?"
+
+Pick a draft (1-3), r to regenerate, q to quit: 2
+Opening LinkedIn compose window...
+[browser opens, message pre-loaded]
+Did you send it? (y/n): y
+Saved to history.
+```
+
+---
+
+## Install
 
 ```bash
 git clone https://github.com/peterzhang12312-jpg/linkedin-bot.git
@@ -25,124 +48,100 @@ pip install -r requirements.txt
 playwright install chromium
 ```
 
----
-
-## LinkedIn Session Setup (one-time)
-
-The bot uses a persistent browser profile so LinkedIn sees your real session.
-
-**Step 1** — Set the profile path in `.env` (do this before running setup):
-```
-LI_PROFILE_DIR=./li_profile
-```
-
-**Step 2** — Run the setup command:
-```bash
-python cli.py setup-session
-```
-
-A browser window opens and goes to the LinkedIn login page. Log in normally. Once logged in, come back to the terminal and press Enter. Your session is saved in `li_profile/` and the browser closes.
-
-You won't need to do this again unless LinkedIn expires your session.
-
----
-
-## API Key Setup
-
-Copy the example file and fill it in:
+**Session setup (one-time):**
 
 ```bash
-# macOS / Linux
 cp .env.example .env
-
-# Windows
-copy .env.example .env
+# Add your GEMINI_API_KEY to .env
+python cli.py setup-session
+# Browser opens → log in to LinkedIn → press Enter
 ```
 
-Open `.env` and set:
-
-```
-GEMINI_API_KEY=your_key_here
-LI_PROFILE_DIR=./li_profile
-```
-
-Get your Gemini API key free at [aistudio.google.com](https://aistudio.google.com/) →
-click "Get API key".
-
----
-
-## Persona Setup
-
-A persona tells the bot who you are so it can write messages in your voice.
-
-Open `personas/default.json` and replace the placeholder values:
-
-```json
-{
-  "name": "Default",
-  "USER_NAME": "YOUR_NAME_HERE",
-  "USER_BIO": "YOUR_BIO_HERE — e.g. 'Startup founder building AI tools for legal teams'",
-  "USER_GOAL": "YOUR_GOAL_HERE — e.g. 'Connect with ML engineers and AI researchers'",
-  "USER_TONE": "concise and direct",
-  "preferred_angles": ["recent_post", "career_transition", "shared_interest"]
-}
-```
-
-You can create additional personas (e.g. `recruiter`, `investor`) with:
-
-```bash
-python cli.py personas new my-persona
-```
+Get a free Gemini API key at [aistudio.google.com](https://aistudio.google.com/).
 
 ---
 
 ## Usage
 
 ```bash
-# Generate drafts for a LinkedIn profile
+# Generate drafts for a profile
 python cli.py run --url https://www.linkedin.com/in/someone
 
-# Use a specific persona
+# Use a specific persona (founder, recruiter, etc.)
 python cli.py run --url https://www.linkedin.com/in/someone --persona founder
 
-# Dry run — generate drafts without opening LinkedIn compose window
+# Dry run — drafts only, no browser
 python cli.py run --url https://www.linkedin.com/in/someone --dry-run
 
-# See what you have sent before
+# View send history
 python cli.py history list
 
-# List available personas
+# List personas
 python cli.py personas list
 ```
 
 ---
 
-## Workflow
+## Features
 
-1. Bot scrapes the profile and recent posts
-2. Bot shows 3 draft messages (under 280 characters each)
-3. You pick one (or ask for a regeneration)
-4. Bot opens the LinkedIn compose window
-5. You paste the message and click Send
-6. CLI asks "Did you send it?" — updates your history
+- **Playwright persistent session** — logs in once, reuses session. Handles CAPTCHA recovery.
+- **Gemini 2.0 Flash** — fast, cheap, good. Generates 3 drafts per angle (recent post / career transition / shared interest).
+- **AI-speak blocklist** — scans for "synergy", "game-changer", "excited to connect" and blocks them automatically.
+- **280-char enforced** — LinkedIn connection limit. Every draft is guaranteed under it.
+- **Multi-persona** — write as your "founder" self, your "recruiter" self, your "researcher" self.
+- **Draft history** — append-only JSONL. Never lose a message you sent.
+- **Human-in-the-loop** — bot never sends anything. You review, you send.
+
+---
+
+## Persona Setup
+
+Edit `personas/default.json`:
+
+```json
+{
+  "name": "Default",
+  "USER_NAME": "Your Name",
+  "USER_BIO": "Startup founder building AI tools for legal teams",
+  "USER_GOAL": "Connect with ML engineers and AI researchers",
+  "USER_TONE": "concise and direct",
+  "preferred_angles": ["recent_post", "career_transition", "shared_interest"]
+}
+```
+
+Create additional personas:
+
+```bash
+python cli.py personas new recruiter
+```
+
+---
+
+## Stack
+
+- **Python 3.11+** · **Playwright** (sync API) · **Gemini 2.0 Flash** · **Typer CLI**
+- Append-only JSONL history · External prompt templates · 127 passing tests
 
 ---
 
 ## Troubleshooting
 
-**CAPTCHA detected**
-LinkedIn showed a CAPTCHA. Solve it in the browser window that opened, then press Enter.
+**CAPTCHA detected** — Solve it in the browser window, press Enter in the terminal.
 
-**Session expired — re-login required**
-Your LinkedIn session expired. Run:
+**Session expired** — Run `python cli.py setup-session` and log in again.
+
+**LinkedIn DOM changed** — Open an issue or update selectors in `linkedin_bot/scraper.py`.
+
+---
+
+## Contributing
+
+PRs welcome. Run tests with:
+
 ```bash
-python cli.py setup-session
+pytest tests/ -v
 ```
-Log in again in the browser, then press Enter.
 
-**LinkedIn DOM changed — selectors need updating**
-LinkedIn changed their HTML. Open an issue or update the selectors in
-`linkedin_bot/scraper.py`.
+---
 
-**GEMINI_API_KEY not set**
-Make sure you copied `.env.example` to `.env` and filled in your key.
+*Built with [Claude Code](https://claude.ai/code)*
